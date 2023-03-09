@@ -58,36 +58,36 @@ public:
     }
     VectorInt(const VectorInt &) = delete;
     VectorInt &operator= (const VectorInt&) = delete;
-    void pushFront(const int var){
-        if(this->size == this->capacity)
-            add_capacity();
-        int *var_arr = this->arr;
-        arr = new int [this->capacity];
-        for(size_t idx_i = 0; idx_i < this->size; ++idx_i){
-            arr[idx_i + 1] = var_arr[idx_i];
-        }
-        delete[] var_arr;
-        arr[0] = var;
-        ++this->size;
-    }
-    void insert(const int var,const int index){
-        if(at(index)){
-            if(this->size == this->capacity)
+    void pushFront(const int var) {
+        if (this->size == 0)
+            pushBack(var);
+        else {
+            if (this->size == this->capacity)
                 add_capacity();
-            
-            int *var_arr = this->arr;
-            arr = new int [capacity];
+            for (int idx_i = this->size; idx_i > 0; --idx_i) {
+                arr[idx_i] = arr[idx_i - 1];
+            }
+            arr[0] = var;
+            ++this->size;
+        }
+    }
+    void insert(const int var, const int index) {
+        if (index == 0 || index == size) 
+            pushBack(var);
+        else if (at(index)) {
+            if (this->size == this->capacity)
+                add_capacity();
             size_t idx_k = 0;
-            for(size_t idx_i = 0; idx_i <= size; ++idx_i){
-                if(idx_i == index)
-                    ++idx_i;
-                arr[idx_i] = var_arr[idx_k];
+            for (size_t idx_i = 0; idx_i <= this->size; ++idx_i) {
+                if (idx_i == index)
+                    continue;
+                arr[idx_i] = arr[idx_k];
                 ++idx_k;
             }
-            delete[] var_arr;
             arr[index] = var;
             ++this->size;
-        }else
+        }
+        else
             throw ExceptionVectorInt("Wrong index, array size is smaller <insert>");
     }
     bool at(const int index){
@@ -128,7 +128,9 @@ try
     VectorInt arr(10);
     std::cout << arr.get_size() << '\t' << arr.get_capacity() << std::endl;
     arr.pushBack(2);
+    std::cout << arr << std::endl;
     arr.pushFront(1);
+    std::cout << arr << std::endl;
     arr.insert(99,1);
     std::cout << arr.get_size() << '\t' << arr.get_capacity() << std::endl;
     std::cout << arr << std::endl;
